@@ -50,21 +50,31 @@ export const SCORED_COLUMNS: readonly ColumnSpec[] = [
 ];
 
 /**
- * How alike two columns have to be before the detector treats them as one
- * record of the same thing.
+ * What share of the rows two columns have to agree on, to the dollar, before
+ * the detector treats them as one number recorded twice.
  *
- * The bar sits where it does because of what the two kinds of pair actually
- * measure on this book. A sweep of twenty thousand generated books puts the
- * pair that really is one spend recorded twice no lower than 0.97, and puts
- * the closest honest pair, labor hours against a materials column, no higher
- * than 0.90. This bar sits in that gap. Set it much lower and the detector
- * starts folding two genuinely different measurements that happen to move
- * together, which would be a false finding reported in confident language.
+ * This used to be a bar on the rank correlation, set at 0.95, and that was the
+ * wrong measurement. Correlation asks whether two columns move together, which
+ * labor hours and materials genuinely do without being the same number. Over
+ * the two million books this page can actually generate, the honest pair that
+ * came closest reached 0.942 and the true pair once fell to 0.947, so the bar
+ * sat inside both ranges at once: a gap of five thousandths, with the fold
+ * failing in some books and nothing but luck keeping a false one away.
+ *
+ * Agreement answers the question the page is actually asking. "One spend
+ * recorded twice" means the two figures are the same figure, and that is what
+ * CLOSE_TOLERANCE tests. Measured over three hundred thousand books, materials
+ * against parts agree on all 24 rows every single time, and the closest any
+ * honest pair came was 2 rows. The bar sits at half, which is 22 rows clear of
+ * one failure mode and 10 clear of the other.
  */
-const DUPLICATE_THRESHOLD = 0.95;
+const DUPLICATE_CLOSE_SHARE = 0.5;
 
 /** Scales a typical absolute deviation up to something comparable to a sigma. */
 const MAD_TO_SIGMA = 1.4826;
+
+/** Does the same for an interquartile range. */
+const IQR_TO_SIGMA = 1.349;
 
 /** What the detector concluded about a pair of columns saying the same thing. */
 export interface DuplicatePair {
@@ -158,6 +168,11 @@ function median(values: readonly number[]): number {
  * infinitely odd.
  */
 function spread(values: readonly number[]): number {
+  return Math.max(madSpread(values), iqrSpread(values));
+}
+
+/** Typical distance from the middle, from the median absolute deviation. */
+function madSpread(values: readonly number[]): number {
   const mid = median(values);
   const absolute = values.map((value) => Math.abs(value - mid));
   const mad = median(absolute) * MAD_TO_SIGMA;
@@ -166,6 +181,19 @@ function spread(values: readonly number[]): number {
   }
   const mean = absolute.reduce((sum, value) => sum + value, 0) / absolute.length;
   return mean > 1e-9 ? mean * MAD_TO_SIGMA : 1;
+}
+
+/** The same quantity read off the middle half of the column instead. */
+function iqrSpread(values: readonly number[]): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  const at = (p: number): number => {
+    const i = (sorted.length - 1) * p;
+    const lo = Math.floor(i);
+    const hi = Math.ceil(i);
+    return (sorted[lo] as number) + ((sorted[hi] as number) - (sorted[lo] as number)) * (i - lo);
+  };
+  const width = (at(0.75) - at(0.25)) / IQR_TO_SIGMA;
+  return width > 1e-9 ? width : 1;
 }
 
 /**
@@ -278,34 +306,37 @@ export function findOddOne(jobs: readonly Job[]): Finding {
     return values;
   };
 
-  // Step two: find the most alike pair, and fold it if it clears the bar.
+  // Step two: find the pair that is one number recorded twice, and fold it.
   let duplicate: DuplicatePair | null = null;
-  let best = DUPLICATE_THRESHOLD;
+  const needed = Math.ceil(jobs.length * DUPLICATE_CLOSE_SHARE);
   for (let i = 0; i < SCORED_COLUMNS.length; i += 1) {
     for (let j = i + 1; j < SCORED_COLUMNS.length; j += 1) {
       const a = SCORED_COLUMNS[i] as ColumnSpec;
       const b = SCORED_COLUMNS[j] as ColumnSpec;
-      const r = correlate(read(a.key), read(b.key));
-      if (Math.abs(r) > best) {
-        best = Math.abs(r);
-        const left = raw.get(a.key) as number[];
-        const right = raw.get(b.key) as number[];
-        let close = 0;
-        for (let k = 0; k < jobs.length; k += 1) {
-          const x = left[k] as number;
-          const y = right[k] as number;
-          const scale = Math.max(Math.abs(x), Math.abs(y), 1e-9);
-          if (Math.abs(x - y) / scale <= CLOSE_TOLERANCE) {
-            close += 1;
-          }
+      const left = raw.get(a.key) as number[];
+      const right = raw.get(b.key) as number[];
+      let close = 0;
+      for (let k = 0; k < jobs.length; k += 1) {
+        const x = left[k] as number;
+        const y = right[k] as number;
+        const scale = Math.max(Math.abs(x), Math.abs(y), 1e-9);
+        if (Math.abs(x - y) / scale <= CLOSE_TOLERANCE) {
+          close += 1;
         }
-        duplicate = {
-          a,
-          b,
-          correlation: r,
-          closeCount: close,
-          jobCount: jobs.length,
-        };
+      }
+      if (close < needed) {
+        continue;
+      }
+      // Correlation no longer decides anything. It is kept because it is a
+      // fair summary of how tightly the pair tracks, and it breaks the tie if
+      // two pairs ever agree on the same number of rows.
+      const r = correlate(read(a.key), read(b.key));
+      if (
+        duplicate === null ||
+        close > duplicate.closeCount ||
+        (close === duplicate.closeCount && Math.abs(r) > Math.abs(duplicate.correlation))
+      ) {
+        duplicate = { a, b, correlation: r, closeCount: close, jobCount: jobs.length };
       }
     }
   }

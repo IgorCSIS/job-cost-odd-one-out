@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" role="img" aria-label="Job Cost Odd-One-Out. Twenty four closed jobs with one cost line highlighted as the one that does not match.">
+  <title>Job Cost Odd-One-Out</title>
+  <desc>After a job closes, see which cost line does not match the normal pattern across 24 jobs. A demo built on made-up jobs: nothing is connected to any real book.</desc>
+  <rect width="1200" height="300" rx="16" fill="#070E18"/>
+  <rect x="0.5" y="0.5" width="1199" height="299" rx="15.5" fill="none" stroke="#1B2A40"/>
+  <g transform="translate(64 108) scale(2.1)">
+    <rect width="32" height="32" rx="7" fill="#070E18"/>
+    <rect x="6" y="17" width="4" height="8" rx="1" fill="#8FA3BC"/>
+    <rect x="12" y="15" width="4" height="10" rx="1" fill="#8FA3BC"/>
+    <rect x="18" y="16" width="4" height="9" rx="1" fill="#8FA3BC"/>
+    <rect x="24" y="7" width="4" height="18" rx="1" fill="#F59E0B"/>
+  </g>
+  <text x="212" y="120" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="40" font-weight="700" fill="#F8FAFC" letter-spacing="-1">Job Cost Odd-One-Out</text>
+  <text x="214" y="156" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="19" fill="#8FA3BC">The closed-job cost check for trades</text>
+  <circle cx="221" cy="186" r="5" fill="#F59E0B"/>
+  <text x="235" y="192" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="15" fill="#8FA3BC">Made-up jobs. Nothing connected to your books.</text>
+  <text x="700" y="46" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11" fill="#8FA3BC">ONE JOB, ONE LINE, ONE PLAIN REASON</text>
+  <g transform="translate(700 62)">
+    <text x="14" y="14" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#8FA3BC">JOB</text>
+    <text x="150" y="14" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#8FA3BC" text-anchor="end">MATERIALS</text>
+    <text x="240" y="14" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#8FA3BC" text-anchor="end">PARTS</text>
+    <text x="330" y="14" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10" fill="#8FA3BC" text-anchor="end">PERMITS</text>
+    <rect x="0" y="24" width="344" height="32" rx="7" fill="#111C2E" stroke="#1B2A40"/>
+    <text x="14" y="45" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="400" fill="#F8FAFC">4551</text>
+    <text x="150" y="45" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#CBD5E1" text-anchor="end">$505</text>
+    <text x="240" y="45" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#CBD5E1" text-anchor="end">$510</text>
+    <text x="330" y="45" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#CBD5E1" text-anchor="end">$79</text>
+    <rect x="0" y="62" width="344" height="32" rx="7" fill="#111C2E" stroke="#1B2A40"/>
+    <text x="14" y="83" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="400" fill="#F8FAFC">4554</text>
+    <text x="150" y="83" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#CBD5E1" text-anchor="end">$824</text>
+    <text x="240" y="83" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#CBD5E1" text-anchor="end">$812</text>
+    <text x="330" y="83" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#CBD5E1" text-anchor="end">$71</text>
+    <rect x="0" y="100" width="344" height="32" rx="7" fill="#2A2109" stroke="#D97706"/>
+    <text x="14" y="121" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#F8FAFC">4557</text>
+    <text x="150" y="121" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#CBD5E1" text-anchor="end">$798</text>
+    <text x="240" y="121" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#CBD5E1" text-anchor="end">$803</text>
+    <rect x="254" y="104" width="82" height="24" rx="5" fill="#F59E0B"/>
+    <text x="330" y="121" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="700" fill="#070E18" text-anchor="end">$361</text>
+    <rect x="0" y="138" width="344" height="32" rx="7" fill="#111C2E" stroke="#1B2A40"/>
+    <text x="14" y="159" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" font-weight="400" fill="#F8FAFC">4560</text>
+    <text x="150" y="159" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#CBD5E1" text-anchor="end">$789</text>
+    <text x="240" y="159" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#CBD5E1" text-anchor="end">$788</text>
+    <text x="330" y="159" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#CBD5E1" text-anchor="end">$63</text>
+  </g>
+  <text x="64" y="252" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="13" fill="#8FA3BC">Materials and Parts are one spend recorded twice.</text>
+  <text x="64" y="272" font-family="system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="13" fill="#8FA3BC">Fold them, and the permits line is the one that does not fit.</text>
+</svg>

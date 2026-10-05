@@ -7,6 +7,18 @@
  * because that is what was computed. Whether it is a typo, a real equipment
  * run, or a permit from a second agency is the owner's call, and the wording
  * leaves it to them.
+ *
+ * The closing clause reports where the next farthest job sits rather than
+ * claiming nothing else comes close. The claim version was false in the books
+ * where another row ties the odd one on that single line, which happens
+ * because the odd row is chosen across every column at once while the line is
+ * chosen within that row. Stating the runner-up is true either way, and a
+ * reader can see for themselves how big the gap is.
+ *
+ * The band is described as the line's range rather than the jobs' range. When
+ * two columns have been folded the figures behind it are both of them, so for
+ * 23 other jobs it is 46 numbers, and saying "the other 23 jobs run" named a
+ * different computation than the one performed.
  */
 
 import type { Job } from "./data.ts";
@@ -60,9 +72,9 @@ export function explain(finding: Finding): Explanation {
 
   const oddSentence =
     `After that, ${jobPhrase(job)} sits farthest from the pack. Its ${oddLine.label} ` +
-    `line is ${formatValue(oddLine.value, kind)}, where the other ${jobCount - 1} jobs ` +
-    `run ${low} to ${high}. That puts it ${spreadText(oddLine.spreads)} spreads ` +
-    `${oddLine.direction} the middle, and no other job's ${oddLine.label} line gets past ` +
+    `line is ${formatValue(oddLine.value, kind)}, where that line runs ${low} to ${high} ` +
+    `across the other ${jobCount - 1} jobs. That puts it ${spreadText(oddLine.spreads)} spreads ` +
+    `${oddLine.direction} the middle, where the next farthest job on that line sits at ` +
     `${spreadText(oddLine.otherMaxSpreads)}.`;
 
   return {

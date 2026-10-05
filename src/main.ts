@@ -55,7 +55,6 @@ const els = {
   status: need<HTMLParagraphElement>("status"),
   head: need<HTMLTableSectionElement>("jobs-head"),
   body: need<HTMLTableSectionElement>("jobs-body"),
-  scroll: need<HTMLDivElement>("table-scroll"),
   verdict: need<HTMLDivElement>("verdict"),
   verdictEmpty: need<HTMLParagraphElement>("verdict-empty"),
   verdictDuplicate: need<HTMLParagraphElement>("verdict-duplicate"),
@@ -164,14 +163,22 @@ function clearHighlight(): void {
   }
 }
 
+/** What the verdict card says before anything has been checked. */
+const RESTING_VERDICT = "Hit Find the odd one. and the reason shows up here, in words.";
+
 /** Put the page back to the state it loads in. */
 function resetVerdict(): void {
   clearHighlight();
   els.verdict.dataset.state = "resting";
+  // The error path overwrites this line. Without restoring it, one failure
+  // left "Demo couldn't load. Try again." as the resting text for good, even
+  // after a successful reshuffle.
+  els.verdictEmpty.textContent = RESTING_VERDICT;
   els.verdictEmpty.hidden = false;
   els.verdictDuplicate.hidden = true;
   els.verdictOdd.hidden = true;
   els.spreadNote.hidden = true;
+  els.verdictOdd.className = "verdict-line";
   els.find.className = "btn btn-primary";
   els.again.className = "btn btn-ghost";
 }

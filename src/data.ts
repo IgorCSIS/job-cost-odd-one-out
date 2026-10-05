@@ -16,7 +16,7 @@
 /** A trade the sample shop runs. */
 export type Trade = "HVAC" | "Plumbing";
 
-/** Which cost line was planted as the odd one, used only by the tests. */
+/** Which cost line was planted as the odd one. Read by the sweep scripts. */
 export type PlantedLine = "permits" | "materials";
 
 /** One closed job, with every cost line the demo shows. */
@@ -213,8 +213,8 @@ export function buildBook(seed: number): JobBook {
     });
   }
 
-  // Keep the planted row away from the first and last couple of rows, so it is
-  // never the row a phone happens to show first.
+  // Keep the planted row away from the first three and last three rows, so it
+  // is never the row a phone happens to show first.
   const oddIndex = 3 + Math.floor(rnd() * (JOB_COUNT - 6));
   const plantedLine: PlantedLine = rnd() < 0.5 ? "permits" : "materials";
   const base = jobs[oddIndex];
