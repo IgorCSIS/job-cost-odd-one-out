@@ -160,6 +160,10 @@ function clearHighlight(): void {
   }
   for (const th of Array.from(els.head.rows[0]?.cells ?? [])) {
     th.classList.remove("is-paired");
+    const note = th.querySelector(".visually-hidden");
+    if (note !== null) {
+      note.remove();
+    }
   }
 }
 
@@ -206,6 +210,13 @@ function highlight(finding: Finding): void {
   for (const th of Array.from(els.head.rows[0]?.cells ?? [])) {
     if (th.dataset.key !== undefined && pairKeys.has(th.dataset.key)) {
       th.classList.add("is-paired");
+      // The odd row says "Odd one out" in words rather than relying on the
+      // amber alone. This marking had no such fallback, and its cell tint is
+      // 5% alpha over a dark row, which is close to invisible for everyone.
+      const note = document.createElement("span");
+      note.className = "visually-hidden";
+      note.textContent = " (counted once, with the other column it matches)";
+      th.appendChild(note);
     }
   }
 
@@ -248,6 +259,13 @@ function revealRow(jobId: string): void {
   }
   const behavior: ScrollBehavior = reducedMotion() ? "auto" : "smooth";
   row.scrollIntoView({ behavior, block: "center" });
+  // Scrolling moves the page for someone who can see it and nobody else. The
+  // row header takes focus so a keyboard lands on the evidence too.
+  const header = row.querySelector("th");
+  if (header !== null) {
+    header.setAttribute("tabindex", "-1");
+    header.focus({ preventScroll: true });
+  }
 }
 
 /** Run the detector on the book that is already drawn, and report it. */
@@ -297,19 +315,19 @@ function fail(error: unknown): void {
 /**
  * Pick the starting seed.
  *
- * `?fail=1` is a test hook that forces the error path, so the failure state can
- * be checked without breaking the build on purpose. It is matched against a
- * whitelist and never printed back onto the page.
+ * `?fail=1` is a test hook that forces the error path on first load, so the
+ * failure state can be checked without breaking the build on purpose. Pressing
+ * either button afterwards starts an ordinary run: the hook is not a stuck
+ * mode. It is matched against a whitelist and never printed back onto the page.
  */
 function startingSeed(): number {
   const params = new URLSearchParams(window.location.search);
-  for (const key of params.keys()) {
-    if (!ALLOWED_PARAMS.has(key)) {
-      continue;
-    }
-    if (key === "fail" && params.get("fail") === "1") {
-      return 0;
-    }
+  // One read of one whitelisted name. This used to walk every parameter and
+  // skip the ones not on the list, which looked like a guard and was not: no
+  // parameter value reaches the DOM either way, and the walk still ended in
+  // this same test.
+  if (ALLOWED_PARAMS.has("fail") && params.get("fail") === "1") {
+    return 0;
   }
   // A seed from the clock, so two visitors do not compare notes on the same
   // book and conclude the answer is hard-coded.
