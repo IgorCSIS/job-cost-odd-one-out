@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Job Cost Odd-One-Out">
+  <!--
+    Four cost bars. Three sit in a tight band, one does not. That is the whole
+    product, and it is the one idea small enough to survive at 16 pixels.
+  -->
+  <rect width="32" height="32" rx="7" fill="#070E18"/>
+  <rect x="6" y="17" width="4" height="8" rx="1" fill="#8FA3BC"/>
+  <rect x="12" y="15" width="4" height="10" rx="1" fill="#8FA3BC"/>
+  <rect x="18" y="16" width="4" height="9" rx="1" fill="#8FA3BC"/>
+  <rect x="24" y="7" width="4" height="18" rx="1" fill="#F59E0B"/>
+</svg>

@@ -1,0 +1,562 @@
+/*
+ * Job Cost Odd-One-Out: the stylesheet.
+ *
+ * Same contractor lane as the other demos in this set: deep ink, sand text,
+ * one ember accent and nothing else. The accent is spent sparingly on purpose,
+ * because the whole page turns on one highlighted row, and an accent used for
+ * decoration cannot also mean "this is the one".
+ */
+
+:root {
+  --ink-950: #070e18;
+  --ink-900: #0b1220;
+  --ink-800: #111c2e;
+  --ink-700: #1b2a40;
+  --ink-600: #2a3d57;
+  --sand-50: #f8fafc;
+  --sand-200: #cbd5e1;
+  --sand-400: #8fa3bc;
+  --ember-400: #f59e0b;
+  --ember-500: #d97706;
+  --ember-600: #c2410c;
+  --warn: #fbbf24;
+  --warn-bg: #2a2109;
+  --bad: #f87171;
+  --bad-bg: #2b1417;
+  --radius-card: 0.875rem;
+  /* Smallest comfortable touch target. Every button and link clears it. */
+  --tap: 2.75rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* The odd row is scrolled into view, so anchoring has to clear the header. */
+  scroll-padding-top: 4.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--ink-950);
+  color: var(--sand-50);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 10;
+  padding: 0.75rem 1rem;
+  background: var(--ember-400);
+  color: var(--ink-950);
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ember-400);
+  outline-offset: 2px;
+}
+
+/* Header */
+
+.site-header {
+  border-bottom: 1px solid var(--ink-700);
+  background: var(--ink-900);
+  padding: 0.7rem 0;
+}
+
+.site-header .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.wordmark img {
+  display: block;
+}
+
+/* Chips */
+
+.chip {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border: 1px solid var(--ink-600);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sand-200);
+  white-space: normal;
+}
+
+.chip-demo {
+  border-color: var(--ember-500);
+  color: var(--ember-400);
+}
+
+.chip-quiet {
+  border-color: var(--ink-600);
+  color: var(--sand-200);
+}
+
+.chip-done {
+  border-color: var(--ember-500);
+  color: var(--ember-400);
+}
+
+/* Hero */
+
+.hero {
+  padding: 2.25rem 1rem 1.5rem;
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.honesty {
+  margin: 0 0 0.9rem;
+  color: var(--ember-400);
+  font-weight: 600;
+}
+
+.sub {
+  margin: 0 0 1.25rem;
+  max-width: 44rem;
+  color: var(--sand-200);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+/* Buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap);
+  padding: 0.6rem 1.1rem;
+  border: 1px solid transparent;
+  border-radius: 0.6rem;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  /* Diverges from a plain anchor on purpose: these read as buttons, and an
+     underline inside a filled pill looks like a mistake. */
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+.btn-primary {
+  background: var(--ember-400);
+  border-color: var(--ember-400);
+  color: var(--ink-950);
+}
+
+.btn-primary:hover {
+  background: var(--ember-500);
+  border-color: var(--ember-500);
+}
+
+.btn-ghost {
+  border-color: var(--ink-600);
+  color: var(--sand-50);
+}
+
+.btn-ghost:hover {
+  border-color: var(--sand-400);
+}
+
+/* Status line */
+
+.status {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  color: var(--sand-200);
+}
+
+.status[data-tone="found"] {
+  color: var(--warn);
+  font-weight: 600;
+}
+
+.status[data-tone="error"] {
+  color: var(--bad);
+  font-weight: 600;
+}
+
+.noscript-line {
+  padding: 0.9rem 1rem;
+  color: var(--warn);
+}
+
+/* Table */
+
+.table-section {
+  padding: 0.5rem 1rem 1.5rem;
+}
+
+h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+}
+
+.table-scroll {
+  /*
+   * Capped height, so twenty four rows do not push the explanation a full
+   * phone screen out of reach. The odd row is scrolled into view inside here
+   * when it is found.
+   */
+  max-height: 26rem;
+  overflow: auto;
+  border: 1px solid var(--ink-700);
+  border-radius: var(--radius-card);
+  background: var(--ink-900);
+  -webkit-overflow-scrolling: touch;
+}
+
+table.jobs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+}
+
+table.jobs th,
+table.jobs td {
+  padding: 0.5rem 0.7rem;
+  text-align: right;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--ink-800);
+}
+
+table.jobs th[scope="col"] {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--ink-800);
+  color: var(--sand-200);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* The job cell carries the row's identity, so it stays put and stays left. */
+table.jobs th[scope="row"],
+table.jobs th.col-text,
+table.jobs td.col-text {
+  text-align: left;
+  font-weight: 500;
+}
+
+/* Only the job cell wraps: it holds two lines. A town that wraps makes every
+   row a different height for no gain. */
+table.jobs th[scope="row"] {
+  white-space: normal;
+}
+
+table.jobs th[scope="row"] {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--ink-900);
+  min-width: 8.5rem;
+}
+
+.job-id {
+  display: block;
+  font-weight: 700;
+}
+
+.job-work {
+  display: block;
+  color: var(--sand-400);
+  font-size: 0.78rem;
+}
+
+/* The one highlighted row, and the one highlighted cell inside it. */
+
+tr.is-odd th[scope="row"],
+tr.is-odd td {
+  background: var(--warn-bg);
+}
+
+tr.is-odd th[scope="row"] {
+  box-shadow: inset 0.2rem 0 0 var(--ember-400);
+}
+
+/*
+ * Written to outrank "tr.is-odd td" above, which also sets a background. A bare
+ * td.is-odd-cell loses that fight on specificity and leaves the one cell the
+ * page exists to point at as dark text on a dark row.
+ */
+tr.is-odd td.is-odd-cell {
+  background: var(--ember-400);
+  color: var(--ink-950);
+  font-weight: 700;
+}
+
+.odd-flag {
+  display: inline-block;
+  margin-top: 0.2rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: var(--ember-400);
+  color: var(--ink-950);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/*
+ * The two columns the detector folded together.
+ *
+ * A band down the pair rather than a rule under every cell: the underline
+ * version drew a line between every row of those two columns and read as table
+ * chrome rather than as a finding. The header carries the heavier mark, since
+ * that is where the claim is being made.
+ */
+th.is-paired {
+  box-shadow: inset 0 -0.2rem 0 var(--ember-500);
+}
+
+td.is-paired {
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.table-note,
+.step-note {
+  margin: 0.6rem 0 0;
+  color: var(--sand-400);
+  font-size: 0.85rem;
+}
+
+/* Verdict */
+
+.verdict {
+  padding: 0.5rem 1rem 1.5rem;
+}
+
+.card {
+  border: 1px solid var(--ink-700);
+  border-radius: var(--radius-card);
+  background: var(--ink-900);
+}
+
+.verdict-card {
+  padding: 1rem 1.1rem;
+}
+
+.verdict-card[data-state="found"] {
+  border-color: var(--ember-500);
+}
+
+.verdict-card[data-state="error"] {
+  border-color: var(--bad);
+}
+
+.verdict-empty {
+  margin: 0;
+  color: var(--sand-400);
+}
+
+.verdict-line {
+  margin: 0 0 0.75rem;
+  color: var(--sand-50);
+}
+
+.verdict-line:last-child {
+  margin-bottom: 0;
+}
+
+.verdict-line.lead {
+  font-weight: 600;
+}
+
+/* Disclosure */
+
+.accordion {
+  margin: 0 auto 1.5rem;
+  max-width: 64rem;
+  padding: 0;
+}
+
+.accordion summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0.5rem 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.card-body {
+  padding: 0 1.1rem 1rem;
+}
+
+.how-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: var(--sand-200);
+}
+
+.how-list li {
+  margin-bottom: 0.6rem;
+}
+
+.how-list strong {
+  color: var(--sand-50);
+}
+
+/* Chain and offer */
+
+.chain,
+.offer {
+  padding: 0.5rem 1rem 1.75rem;
+}
+
+.chain-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: var(--sand-200);
+}
+
+.chain-list li {
+  margin-bottom: 0.4rem;
+}
+
+.chain-step {
+  display: inline-block;
+  min-width: 9rem;
+  color: var(--sand-400);
+  font-size: 0.85rem;
+}
+
+.chain-here {
+  color: var(--sand-50);
+  font-weight: 600;
+}
+
+.inline-link {
+  display: inline-flex;
+  align-items: center;
+  /* Keeps an inline link a real touch target without turning it into a block. */
+  min-height: var(--tap);
+  color: var(--ember-400);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.inline-link:hover {
+  color: var(--ember-400);
+}
+
+.offer-sub {
+  margin-bottom: 1.1rem;
+}
+
+/* Footer */
+
+.site-footer {
+  border-top: 1px solid var(--ink-700);
+  background: var(--ink-900);
+  padding: 1.25rem 0 1.75rem;
+  color: var(--sand-200);
+  font-size: 0.9rem;
+}
+
+.site-footer p {
+  margin: 0 0 0.25rem;
+}
+
+/* Phones */
+
+@media (max-width: 39.99rem) {
+  .hero {
+    padding-top: 1.25rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .chip-demo {
+    font-size: 0.62rem;
+    padding: 0.2rem 0.6rem;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-actions .btn {
+    flex: 1 1 auto;
+  }
+
+  .table-scroll {
+    max-height: 21rem;
+  }
+
+  .chain-step {
+    display: block;
+    min-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

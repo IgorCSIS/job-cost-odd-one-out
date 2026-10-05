@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!--
+      First element in head on purpose: a policy that arrives after the first
+      script tag has already lost. default-src 'none' means anything not named
+      below is refused, so a tracker or a CDN link pasted in later fails loudly
+      in the console instead of quietly working.
+
+      connect-src 'none' is the one that matters most here. This page talks to
+      nothing. The jobs are generated in the browser and the arithmetic happens
+      in the browser, so there is no endpoint for a cost figure to leak to, and
+      the policy makes that a rule rather than a promise.
+
+      frame-ancestors cannot be set from a meta tag, only from a response
+      header, and GitHub Pages does not let you set headers. Noted in the
+      README rather than pretended away.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; font-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="referrer" content="no-referrer" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#070E18" />
+
+    <title>Job Cost Odd-One-Out: find the job cost line that does not match</title>
+    <meta
+      name="description"
+      content="A demo for HVAC and plumbing owners in East County San Diego. After a job closes, see which cost line does not match your normal pattern. The jobs are made up and nothing connects to your books."
+    />
+    <meta name="author" content="Igor Lima" />
+    <link rel="canonical" href="https://igorcsis.github.io/job-cost-odd-one-out/" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Job Cost Odd-One-Out" />
+    <meta property="og:title" content="Which job cost line does not match?" />
+    <meta
+      property="og:description"
+      content="Twenty four closed jobs, two columns quietly recording the same spend, and one line that does not fit. Demo only: the jobs are made up."
+    />
+    <meta property="og:url" content="https://igorcsis.github.io/job-cost-odd-one-out/" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to the demo</a>
+
+    <header class="site-header">
+      <div class="wrap">
+        <span class="wordmark">
+          <img src="logo.svg" alt="" width="28" height="28" />
+          Job Cost Odd-One-Out
+        </span>
+        <!--
+          The honesty chip lives in the header so it is on screen at every
+          scroll position, not only above the fold.
+        -->
+        <span class="chip chip-demo">Demo: made-up jobs, nothing connected.</span>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero wrap">
+        <h1>Job Cost Odd-One-Out</h1>
+        <p class="honesty">
+          Demo only. These jobs are made up. Nothing is connected to your books.
+        </p>
+        <p class="sub">
+          A closed job book for an East County shop. Two of these money columns are quietly
+          recording the same spend, which hides the one line that does not fit.
+        </p>
+
+        <div class="hero-actions">
+          <button id="find" type="button" class="btn btn-primary">Find the odd one.</button>
+          <button id="again" type="button" class="btn btn-ghost">Run again</button>
+        </div>
+
+        <!--
+          One live region, directly under the buttons that drive it. Short on
+          purpose: it is the answer in a single line for anyone who never
+          scrolls, and it is what a screen reader announces.
+        -->
+        <p id="status" class="status" role="status" aria-live="polite" data-tone="info">
+          24 closed jobs loaded. Nothing has been checked yet.
+        </p>
+      </section>
+
+      <noscript>
+        <p class="wrap noscript-line">
+          This demo needs JavaScript to generate the sample book and do the arithmetic. It still
+          talks to nothing either way.
+        </p>
+      </noscript>
+
+      <section class="table-section wrap" aria-labelledby="table-heading">
+        <h2 id="table-heading">Closed jobs (made up)</h2>
+        <div class="table-scroll" id="table-scroll" tabindex="0" role="region"
+             aria-labelledby="table-heading">
+          <table class="jobs" id="jobs-table">
+            <caption class="visually-hidden">
+              Twenty four made-up closed jobs with their cost lines. One row does not match the
+              pattern.
+            </caption>
+            <thead id="jobs-head"></thead>
+            <tbody id="jobs-body"></tbody>
+          </table>
+        </div>
+        <p class="step-note table-note">
+          Parts comes off the supplier invoice. Materials comes off the job sheet. On these jobs
+          they are two records of the same spend.
+        </p>
+      </section>
+
+      <section class="verdict wrap" aria-labelledby="verdict-heading">
+        <h2 id="verdict-heading">What does not match</h2>
+        <div class="card verdict-card" id="verdict" data-state="resting">
+          <p class="verdict-empty" id="verdict-empty">
+            Hit <strong>Find the odd one.</strong> and the reason shows up here, in words.
+          </p>
+          <p class="verdict-line" id="verdict-duplicate" hidden></p>
+          <p class="verdict-line" id="verdict-odd" hidden></p>
+        </div>
+        <p class="step-note" id="spread-note" hidden>
+          A spread is how far a job usually sits from the middle on that line, so a line at 12
+          spreads is twelve times the normal wobble.
+        </p>
+      </section>
+
+      <details class="accordion card wrap" id="how">
+        <summary>How this is figured</summary>
+        <div class="card-body">
+          <ol class="how-list">
+            <li>
+              <strong>Scale the columns.</strong> Hours, dollars and minutes cannot be compared as
+              they are, so each column is measured against its own middle value and its own typical
+              distance from that middle. The middle rather than the average, because an average is
+              dragged toward whatever is unusual, and the unusual thing is what we are looking for.
+            </li>
+            <li>
+              <strong>Drop the duplicate direction.</strong> If two columns turn out to be one
+              number recorded twice, they are folded into one. Keeping both counts that spend twice
+              and makes the whole book look like it moves together.
+            </li>
+            <li>
+              <strong>Flag the point farthest from the normal cluster.</strong> With the columns on
+              the same footing and the duplicate gone, measure how far each job sits from the middle
+              of the pack, and report the farthest one plus whichever line put it there.
+            </li>
+          </ol>
+          <p class="step-note">
+            That is linear algebra on a small table, not a forecast. It does not learn, it has no
+            opinion about what a job should cost, and it cannot tell a typo from a real equipment
+            run. It only says which line does not match the others. Totals are left out of the
+            arithmetic on purpose: a total is labor plus materials plus permits, so scoring it would
+            count those three a second time and the biggest job would always win.
+          </p>
+        </div>
+      </details>
+
+      <section class="chain wrap" aria-label="The rest of the chain">
+        <h2>The rest of the chain</h2>
+        <ol class="chain-list">
+          <li>
+            <span class="chain-step">Respond fast</span>
+            <a class="inline-link" href="https://igorcsis.github.io/instant-lead-response/"
+               target="_blank" rel="noopener noreferrer">Instant Lead Response</a>
+          </li>
+          <li>
+            <span class="chain-step">Follow up</span>
+            <a class="inline-link" href="https://igorcsis.github.io/lead-followup/"
+               target="_blank" rel="noopener noreferrer">Lead Follow-up</a>
+          </li>
+          <li>
+            <span class="chain-step">Win the job</span>
+            <a class="inline-link" href="https://igorcsis.github.io/ridgeview-remodeling-demo/"
+               target="_blank" rel="noopener noreferrer">Ridgeview Remodeling</a>
+          </li>
+          <li>
+            <span class="chain-step">Ask for the review</span>
+            <a class="inline-link" href="https://igorcsis.github.io/review-ask/"
+               target="_blank" rel="noopener noreferrer">Review Ask</a>
+          </li>
+          <li class="chain-here">
+            <span class="chain-step">Check the books</span>
+            <span>Job Cost Odd-One-Out <span class="chip chip-done">You are here</span></span>
+          </li>
+        </ol>
+      </section>
+
+      <section class="offer wrap" aria-label="Getting this run on a real book">
+        <h2>Want this run on your own book?</h2>
+        <p class="sub offer-sub">
+          This page only knows about made-up jobs. Pointing the same arithmetic at a real export is
+          a conversation, not a button, and it starts with what your books already look like.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="mailto:niftystudiodesigns@gmail.com?subject=job%20costs">
+            Email me about job costs
+          </a>
+          <a class="btn btn-ghost" href="https://igorcsis.github.io/niftyai-portfolio/"
+             target="_blank" rel="noopener noreferrer">
+            See the rest of my work
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>Built by Igor Lima, El Cajon / East County</p>
+        <p class="step-note">Demo: made-up jobs, nothing connected to any real book.</p>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
